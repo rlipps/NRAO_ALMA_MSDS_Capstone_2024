@@ -94,7 +94,7 @@ def update_graph(inspect_topic, click_data, y_axis_option):
     hist.add_trace(go.Bar(
         x=filtered_df.med_freq,
         y=filtered_df[y_axis_option],  # Use selected y-axis option
-        marker=dict(color=filtered_df.count_proj, colorscale='bluered'),
+        marker=dict(color=filtered_df.count_proj, colorscale='bluered', line=dict(width=0.1, color='black')),
         width=filtered_df.width.to_list(),
         name=f'Cluster for Topic {inspect_topic}',
         hovertemplate=
