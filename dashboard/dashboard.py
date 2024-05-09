@@ -16,7 +16,10 @@ app = Dash(__name__)
 
 # define layout
 app.layout = html.Div([
-    html.H2('Select Topic:', style={'text-align': 'center', 'font-family': 'arial', 'color': 'white'}),
+    html.H1('ALMA Spectral Line Measurement Explorer'),
+    html.H2('This dashboard allows you to explore the measurements made for accepted\
+            projects, grouped by project topic. Select a topic to explore with the dropdown menu below.'),
+    html.H3('Select Topic:', style={'text-align': 'left', 'font-family': 'arial', 'color': 'white'}),
     dcc.Dropdown(
         id='topic-cluster-options',
         options=[{'label': str(i), 'value': i} for i in range(51)],
