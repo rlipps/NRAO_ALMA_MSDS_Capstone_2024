@@ -16,10 +16,15 @@ app = Dash(__name__)
 
 # define layout
 app.layout = html.Div([
-    html.H1('ALMA Spectral Line Measurement Explorer'),
+    html.H1('ALMA Spectral Line Measurement Explorer', style={'font-family':'arial'}),
     html.H2('This dashboard allows you to explore the measurements made for accepted\
-            projects, grouped by project topic. Select a topic to explore with the dropdown menu below.'),
-    html.H3('Select Topic:', style={'text-align': 'left', 'font-family': 'arial', 'color': 'white'}),
+            projects, grouped by project topic.', style={'font-family':'arial'}),
+    html.H3('Some of the histogram lines are very narrow, so please refer to the scatterplot to observe all clusters before exploring the histogram.',
+            style={'font-family':'arial'}),
+    html.H3('You can click and drag areas on the plots to zoom in on specific regions.',
+            style={'font-family':'arial'}),
+    html.H3('Select a topic to explore with the dropdown menu below',
+            style={'text-align': 'left', 'font-family': 'arial', 'color': 'black'}),
     dcc.Dropdown(
         id='topic-cluster-options',
         options=[{'label': str(i), 'value': i} for i in range(51)],
@@ -39,7 +44,7 @@ app.layout = html.Div([
             labelStyle={'display': 'inline-block'},
             style={'text-align': 'center'}
         )
-    ], style={'margin': '10px auto', 'textAlign': 'left', 'color': 'white', 'font-family': 'arial'}),
+    ], style={'margin': '10px auto', 'textAlign': 'left', 'color': 'black', 'font-family': 'arial'}),
     dcc.Graph(
         id='histogram'
     ),
@@ -165,7 +170,7 @@ def update_graph(inspect_topic, click_data, y_axis_option):
     style_data_conditional=[
         {
             'if': {'row_index': 'odd'},
-            'backgroundColor': 'DimGray',
+            'backgroundColor': 'Silver',
         }
     ],
     style_header={
