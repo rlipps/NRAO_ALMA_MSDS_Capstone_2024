@@ -30,6 +30,16 @@ app.layout = html.Div([
         options=[{'label': str(i), 'value': i} for i in range(51)],
         value=0
     ),
+    html.Div([
+        html.H3('Select band(s)'),
+        dcc.Checklist(
+        id='band-selector',
+        options=[{'label': band, 'value': band} for band in np.sort(topic_cluster['min_band'].unique())],
+        value=topic_cluster['min_band'].unique(),  # Default value
+        labelStyle={'display': 'inline-block'}
+        ), 
+    ], style={'text-align': 'left', 'font-family': 'arial', 'color': 'black'}
+    ),
     dcc.Graph(
         id='scatterplot'
     ),
@@ -67,20 +77,30 @@ app.layout = html.Div([
     Output('datatable-container', 'children')],
     [Input('topic-cluster-options', 'value'),
      Input('histogram', 'clickData'),
-     Input('y-axis-option', 'value')])
+     Input('y-axis-option', 'value'),
+     Input('band-selector', 'value')])
 
-def update_graph(inspect_topic, click_data, y_axis_option):
+def update_graph(inspect_topic, click_data, y_axis_option, selected_bands):
 
-    inspect_topic_frame = topic_measurement.loc[inspect_topic]
+    inspect_topic_frame = topic_measurement.loc[inspect_topic].query(f'band in {selected_bands}')
 
     inspect_topic_frame = inspect_topic_frame.sort_values('cluster_label', ascending=False)
-    inspect_topic_frame.cluster_label = inspect_topic_frame.cluster_label.astype('str')
 
-    symbols = list(np.zeros(np.unique(inspect_topic_frame.cluster_label).shape[0], 'int'))
-    symbols[-1] = 'x'
+    # Map cluster_labels to symbols for plot
+    def get_symbol(cl):
+        if cl == -1:
+            return 'x'
+        else:
+            return 'circle'
+    symbol_map = {}
+    for cl in inspect_topic_frame.cluster_label.unique():
+        symbol_map[cl.astype('str')] = get_symbol(cl)
+
+    inspect_topic_frame.cluster_label = inspect_topic_frame.cluster_label.astype('str')
 
     # Add noise binary column for plot symbol
     inspect_topic_frame['noise'] = np.where(inspect_topic_frame.cluster_label == '-1', 1, 0)
+    #inspect_topic_frame['symbol'] = np.where(inspect_topic_frame.cluster_label == '-1', 'x', 'circle')
 
     # Noise and Signal
     itf_noise = inspect_topic_frame.noise.sum()
@@ -88,7 +108,7 @@ def update_graph(inspect_topic, click_data, y_axis_option):
 
     # Create filtered dataframe to power histogram
     # We use query because we want to exclude noise
-    filtered_df = topic_cluster.query(f'topic== {inspect_topic} and cluster != -1')
+    filtered_df = topic_cluster.query(f'topic == {inspect_topic} and cluster != -1 and min_band in {selected_bands}')
 
     hist = go.Figure()
     hist.add_trace(go.Bar(
@@ -101,12 +121,14 @@ def update_graph(inspect_topic, click_data, y_axis_option):
         '<i>Cluster Number</i>: %{customdata[0]}<br>' +
         '<i>Count of Projects</i>: %{customdata[1]}<br>' +
         '<i>Count of Measurements</i>: %{customdata[2]}<br>' +
-        '<i>Minimum Frequency</i>: %{customdata[3]}<br>' +
-        '<i>Median Frequency</i>: %{customdata[4]}<br>' +
-        '<i>Maximum Frequency</i>: %{customdata[5]}',
+        '<i>Band</i>: %{customdata[3]}<br>' +
+        '<i>Minimum Frequency</i>: %{customdata[4]}<br>' +
+        '<i>Median Frequency</i>: %{customdata[5]}<br>' +
+        '<i>Maximum Frequency</i>: %{customdata[6]}',
         customdata=list(zip(filtered_df.index.get_level_values(level=1),
                             filtered_df.count_proj,
                             filtered_df.count_meas,
+                            filtered_df.min_band,
                             filtered_df.min_freq,
                             filtered_df.med_freq,
                             filtered_df.max_freq))
@@ -127,13 +149,21 @@ def update_graph(inspect_topic, click_data, y_axis_option):
                          y='cluster_label',
                          color='cluster_label',
                          symbol='cluster_label',
-                         symbol_sequence=symbols,
+                         symbol_map=symbol_map,
+                         custom_data=['cluster_label', 'band', 'low_freq', 'med_freq', 'high_freq', 'project_code'],
                          title=f"HDBSCAN Generated Clusters for Topic {inspect_topic} <br><sup>{itf_signal} Clustered Measurements with {itf_noise} Noise Measurements</sup>",
                          labels={'med_freq': 'Median Frequency (GHz)',
                                  'index': 'Index',
-                                 'cluster_label': 'Cluster Label'
-                                 })
-    scatter.update_traces(marker={'size': 15, 'opacity': 0.5})
+                                 'cluster_label': 'Cluster Label'},
+                        )
+    scatter.update_traces(marker={'size': 15, 'opacity': 0.5},
+                          hovertemplate =
+                            '<i>Cluster Label</i>: %{customdata[0]}<br>' +
+                            '<i>Band</i>: %{customdata[1]}<br>' +
+                            '<i>Min Frequency</i>: %{customdata[2]}<br>' +
+                            '<i>Median Frequency</i>: %{customdata[3]}<br>' +
+                            '<i>Max Frequency</i>: %{customdata[4]}<br>' +
+                            '<i>Project Code</i>: %{customdata[5]}<br>')
 
     scatter.layout.template = 'plotly'
 
@@ -142,7 +172,7 @@ def update_graph(inspect_topic, click_data, y_axis_option):
 
     # If click data is available, update cluster_label
     if click_data:
-        cluster_label = click_data['points'][0]['pointNumber']
+        cluster_label = click_data['points'][0]['customdata'][0]
 
     # Create histogram for selected cluster_label
     cluster_hist = px.histogram(inspect_topic_frame[inspect_topic_frame['cluster_label'] == str(cluster_label)],
