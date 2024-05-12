@@ -160,9 +160,9 @@ def update_graph(inspect_topic, click_data, y_axis_option, selected_bands):
                           hovertemplate =
                             '<i>Cluster Label</i>: %{customdata[0]}<br>' +
                             '<i>Band</i>: %{customdata[1]}<br>' +
-                            '<i>Min Frequency</i>: %{customdata[2]}<br>' +
+                            '<i>Low Frequency</i>: %{customdata[2]}<br>' +
                             '<i>Median Frequency</i>: %{customdata[3]}<br>' +
-                            '<i>Max Frequency</i>: %{customdata[4]}<br>' +
+                            '<i>High Frequency</i>: %{customdata[4]}<br>' +
                             '<i>Project Code</i>: %{customdata[5]}<br>')
 
     scatter.layout.template = 'plotly'
