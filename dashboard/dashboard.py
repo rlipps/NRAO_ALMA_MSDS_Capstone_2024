@@ -7,6 +7,7 @@ import os
 from dash import Dash, html, dcc, Input, Output, callback, dash_table
 
 # Read data
+topic_words = pd.read_csv('../data/model_outputs/topic_words.csv').set_index(['topic', 'word_number'])
 topic_measurement = pd.read_csv('../data/model_outputs/topic_measurement.csv').set_index(['topic', 'measurement'])
 topic_cluster = pd.read_csv('../data/model_outputs/topic_cluster.csv').set_index(['topic', 'cluster'])
 
@@ -30,6 +31,7 @@ app.layout = html.Div([
         options=[{'label': str(i), 'value': i} for i in range(51)],
         value=0
     ),
+    html.Div(id='topic-words-container', style={'text-align': 'left', 'font-family': 'arial', 'color': 'black'}),
     html.Div([
         html.H3('Select band(s)'),
         dcc.Checklist(
@@ -68,6 +70,24 @@ app.layout = html.Div([
         ], style={'width': '49%', 'height':'400px', 'display': 'inline-block', 'vertical-align': 'bottom'})
     ], style={'height':'400px'})
 ])
+
+# Define a callback function to update the topic words based on the selected topic
+@app.callback(
+    Output('topic-words-container', 'children'),
+    [Input('topic-cluster-options', 'value')]
+)
+def update_topic_words(selected_topic):
+    # Filter topic_words based on the selected topic
+    selected_topic_words = topic_words.query(f'topic == {selected_topic}').word.values
+    
+    # If no words found for the selected topic, display no words found
+    if len(selected_topic_words) == 0:
+        return html.P('No words available for the selected topic.')
+    
+    # Join the words into a single string and display them
+    topic_words_str = ', '.join(selected_topic_words)
+    return html.P(f'Topic {selected_topic} Top Words: {topic_words_str}')
+
 
 # define callbacks
 @app.callback([
