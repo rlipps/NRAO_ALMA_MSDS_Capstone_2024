@@ -98,6 +98,7 @@ lda_count_vectorizer = load('models/topic_mining/lda_count_vectorizer.joblib')
 lda_model = load('models/topic_mining/lda_model.joblib')
 
 # Prompt user for title and abstract
+print('\nWelcome to the ALMA Project Explorer!')
 title = input('Enter project title:')
 abstract = input('Enter project abstract:')
 raw_text = title + '. ' + abstract
@@ -114,7 +115,7 @@ df['std_text_sw_removed_lemmatized'] = df.std_text_sw_removed.apply(lambda x: le
 # Predict from models
 # Logistic Regression for Line/Continuum classification
 logreg_pred = logreg_classifier.predict_proba(logreg_tfidf_vectorizer.transform(df.std_text))
-print(f'Predicted probability of only continuum measurements: {round(logreg_pred[0][0]*100, 3)}')
+print(f'\nPredicted probability of only continuum measurements: {round(logreg_pred[0][0]*100, 3)}')
 print(f'Predicted probability of at least one line measurement: {round(logreg_pred[0][1]*100, 3)}')
 
 # # Topic assignment
@@ -131,7 +132,7 @@ for prediction in range(len(sorted_indices)):   # Manage class relabeling to mat
             sorted_indices[prediction][band] += 2 # need to add 2 to index to equal the band that was predicted band (3, 4, 5, 6, 7, 8, 9, or 10)
         else:
             sorted_indices[prediction][band] += 1 # need to add 1 to index to equal the band that was predicted (band 1)
-print(f'Top two predicted bands: {sorted_indices[0][:2]}')
+print(f'Top two predicted bands: {sorted_indices[0][:2]}\n')
 
 # Read data
 topic_words = pd.read_csv('data/model_outputs/topic_words.csv').set_index(['topic', 'word_number'])
@@ -147,11 +148,11 @@ app.layout = html.Div([
     html.H1('ALMA Spectral Line Measurement Explorer', style={'font-family':'arial'}),
     html.H2('This dashboard allows you to explore the measurements made for accepted\
             projects, grouped by project topic.', style={'font-family':'arial'}),
-    html.H3('Some of the histogram lines are very narrow, so please refer to the scatterplot to observe all clusters before exploring the histogram.',
+    html.H3('Some of the histogram lines are very narrow, so please cross-reference the scatterplot with the histogram.',
             style={'font-family':'arial'}),
     html.H3('You can click and drag areas on the plots to zoom in on specific regions.',
             style={'font-family':'arial'}),
-    html.H3('Select a topic to explore with the dropdown menu below',
+    html.H3('The topic below is your predicted topic, but feel free to explore with the dropdown menu below',
             style={'text-align': 'left', 'font-family': 'arial', 'color': 'black'}),
     dcc.Dropdown(
         id='topic-cluster-options',
