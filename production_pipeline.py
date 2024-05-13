@@ -134,9 +134,9 @@ for prediction in range(len(sorted_indices)):   # Manage class relabeling to mat
 print(f'Top two predicted bands: {sorted_indices[0][:2]}')
 
 # Read data
-topic_words = pd.read_csv('../data/model_outputs/topic_words.csv').set_index(['topic', 'word_number'])
-topic_measurement = pd.read_csv('../data/model_outputs/topic_measurement.csv').set_index(['topic', 'measurement'])
-topic_cluster = pd.read_csv('../data/model_outputs/topic_cluster.csv').set_index(['topic', 'cluster'])
+topic_words = pd.read_csv('data/model_outputs/topic_words.csv').set_index(['topic', 'word_number'])
+topic_measurement = pd.read_csv('data/model_outputs/topic_measurement.csv').set_index(['topic', 'measurement'])
+topic_cluster = pd.read_csv('data/model_outputs/topic_cluster.csv').set_index(['topic', 'cluster'])
 
 # Dash code
 # initialize app
