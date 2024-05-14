@@ -13,7 +13,6 @@ from nltk.stem import WordNetLemmatizer
 # Dashboard Packages
 import plotly_express as px
 import plotly.graph_objects as go
-import os
 from dash import Dash, html, dcc, Input, Output, callback, dash_table
 
 # NRAO Stopword list
@@ -363,4 +362,4 @@ def update_graph(inspect_topic, click_data, y_axis_option, selected_bands):
 
 # run app
 if __name__ == '__main__':
-    app.run(jupyter_mode='inline', debug=True)
+    app.run(jupyter_mode='inline', debug=True, use_reloader=False)
