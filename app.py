@@ -98,9 +98,11 @@ lda_model = load('models/topic_mining/lda_model.joblib')
 
 # Prompt user for title and abstract
 print('\nWelcome to the ALMA Project Explorer!')
-title = input('Enter project title:')
-abstract = input('Enter project abstract:')
-raw_text = title + '. ' + abstract
+# title = input('Enter project title:')
+# abstract = input('Enter project abstract:')
+# raw_text = title + '. ' + abstract
+with open('input.txt', 'r') as infile:
+    raw_text = infile.read()
 
 # Create dataframe of input with various text processing required for models
 df = pd.DataFrame({
