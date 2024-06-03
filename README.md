@@ -29,7 +29,7 @@ The following libraries are required for this code
 * numpy
 * nltk
 * re
-* scikit learn
+* scikit-learn
 * string
 * joblib
 * plotly
