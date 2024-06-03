@@ -17,11 +17,13 @@ From this point the script will print the following information for the project 
 The goal of this project is to assist those writing proposals to use the Atacama Large Millimeter/Submillimeter Array (ALMA) telescope. Specifically, we aim to encourage more precise and effective observations with suggestions of frequency parameters based on the research proposal text. 
 
 ### Additional dashboard resources
+
 A version of the dashboard not tied to user inputs is here: https://capstonedashboard-8.onrender.com/
 
 Notice that you can filter for your specified "topic" and "bands." Then, you can pay attention to the high scoring clusters for this specific proposal text. The hope is that through our model's predictions, you can look at the distribution of frequency ranges used by previous, similar projects. We suggest you take the count of observations in each frequency range and the width of each frequency range into account.
 
 ## Dependencies
+
 The following libraries are required for this code
 * pandas
 * numpy
@@ -37,6 +39,7 @@ The following libraries are required for this code
 
 ## File Organization
 ### Dashboard Folder
+
 The "Dashboard" folder holds .py and jupyter notebook of dashboard code that does not require inputs. You can use these files to explore each topic without the predictions from models.
 
 ### Data Folder
@@ -53,6 +56,7 @@ The "Dashboard" folder holds .py and jupyter notebook of dashboard code that doe
   * "Data_Ingestion.ipynb" is by far the most important here as it creates the datasets described above. If you have any questions about the data, refer to this notebook. 
 
 **Models Folder**
+
 The "Models" folder holds the individual models used to power this project.
 * The ".joblib" files hold the models trained on the full dataset and are imported and used to power "app.py"
   * These are equivalent to "pickling" models, just in sklearn's preferred format
