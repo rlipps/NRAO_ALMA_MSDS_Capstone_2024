@@ -40,7 +40,7 @@ The following libraries are required for this code
 ## File Organization
 
 ### Dashboard Folder
-The "Dashboard" folder holds .py and jupyter notebook of dashboard code that does not require inputs. You can use these files to explore each topic without the predictions from models.
+The "Dashboard" folder holds a .py file and a jupyter notebook of the dashboard code that does not require inputs. You can use these files to explore topics without the predictions from models.
 
 ### Data Folder
 * Model Outputs
