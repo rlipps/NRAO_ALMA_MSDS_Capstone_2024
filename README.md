@@ -38,24 +38,24 @@ The following libraries are required for this code
 * [ALminer](https://alminer.readthedocs.io/en/latest/) (necessary for updating data but not for "app.py")
 
 ## File Organization
-### Dashboard Folder
 
+### Dashboard Folder
 The "Dashboard" folder holds .py and jupyter notebook of dashboard code that does not require inputs. You can use these files to explore each topic without the predictions from models.
 
 ### Data Folder
-* **Model Outputs**
+* Model Outputs
   * Holds primary outputs of models trained on full data (as opposed to train/test split models used for accuracy measures, discussed later)
   * These are used to power the "app.py" code
-* **Raw Data**
+* Raw Data
   * "nrao_projects.csv" contains all 4,528 projects cleaned and processed from "Data_Ingestion.ipynb"
   * "observations.csv" contains the output from [https://almascience.nrao.edu/aq/](https://almascience.nrao.edu/aq/) used to find "line" and "continuum" measurements as ALminer does not include this data. See "Data_Ingestion.ipynb" for further details on data ingestion and cleaning.
   * "train_measurements.zip" and "test_measurements.zip" include the measurement-level data for all spectral line projects, split into training and testing groups. These must be extracted to .csv files if you wish to use them.
   * "train_projects.csv" and "test_projects.csv" contain the project-level data for spectral line projects, split into training and testing groups.
-* **Notebooks**
+* Notebooks
   * Various notebooks used for ingesting and exploring data
   * "Data_Ingestion.ipynb" is by far the most important here as it creates the datasets described above. If you have any questions about the data, refer to this notebook. 
 
-**Models Folder**
+### Models Folder
 
 The "Models" folder holds the individual models used to power this project.
 * The ".joblib" files hold the models trained on the full dataset and are imported and used to power "app.py"
